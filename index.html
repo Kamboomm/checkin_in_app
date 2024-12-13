@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ลงเวลาการทำงาน</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, red, orange, yellow, green, blue, indigo, violet);
+            animation: rainbow-bg 10s infinite;
+            overflow: hidden;
+        }
+
+        @keyframes rainbow-bg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .container {
+            text-align: center;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 10px;
+            width: 300px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .time {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .label {
+            font-size: 1rem;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .input-field {
+            width: 90%;
+            padding: 10px;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 1rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .button.log-time {
+            background: linear-gradient(45deg, #ff6f61, #ff9a76);
+            color: white;
+        }
+
+        .button.log-time:hover {
+            background: linear-gradient(45deg, #ff9a76, #ff6f61);
+        }
+
+        .button.back {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .button.back:hover {
+            background-color: #bbb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .animation {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: 150px;
+            height: auto;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0); }
+        }
+
+        .animation img {
+            width: 100%;
+            animation: float 3s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- หน้าแรก -->
+    <div class="container" id="log-time-page">
+        <div class="time" id="current-time">08:15 AM.</div>
+        <div class="label">กรอกรหัสพนักงาน</div>
+        <input type="text" class="input-field" id="employee-id" placeholder="รหัสพนักงาน">
+        <button class="button log-time" onclick="logTime()">ลงเวลา</button>
+        <button class="button back" onclick="goBack()">ย้อนกลับ</button>
+    </div>
+
+    <!-- หน้าสรุป -->
+    <div class="container hidden" id="confirmation-page">
+        <div class="time" id="confirmation-time">08:15 AM.</div>
+        <div class="label">ยืนยันการลงเวลา</div>
+        <div id="employee-id-display" style="font-size: 1.5rem; color: #007bff; margin-bottom: 20px;"></div>
+        <button class="button back" onclick="goBackToLogTime()">ย้อนกลับ</button>
+    </div>
+
+    <div class="animation">
+        <img src="https://via.placeholder.com/150" alt="Animated cartoon">
+    </div>
+
+    <script>
+        // อัปเดตเวลาปัจจุบัน
+        function updateTime() {
+            const now = new Date();
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            const formattedTime =
+                String(hours % 12 || 12).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ' ' + ampm;
+
+            document.getElementById('current-time').textContent = formattedTime;
+            document.getElementById('confirmation-time').textContent = formattedTime;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        // ฟังก์ชันสำหรับ "ลงเวลา"
+        function logTime() {
+            const employeeId = document.getElementById('employee-id').value;
+            if (employeeId) {
+                // แสดงหน้าสรุป
+                document.getElementById('employee-id-display').textContent = employeeId;
+                document.getElementById('log-time-page').classList.add('hidden');
+                document.getElementById('confirmation-page').classList.remove('hidden');
+            } else {
+                alert('กรุณากรอกรหัสพนักงาน');
+            }
+        }
+
+        // ฟังก์ชันสำหรับ "ย้อนกลับ" (จากหน้าสรุป)
+        function goBackToLogTime() {
+            document.getElementById('confirmation-page').classList.add('hidden');
+            document.getElementById('log-time-page').classList.remove('hidden');
+        }
+
+        // ฟังก์ชันสำหรับ "ย้อนกลับ" (หน้าแรก)
+        function goBack() {
+            alert('กลับไปยังหน้าก่อนหน้า');
+        }
+    </script>
+</body>
+</html>
